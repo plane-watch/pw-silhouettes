@@ -32,6 +32,6 @@ for base in $bases; do
   echo "Creating $out ..."
 
   # shellcheck disable=SC2086
-  magick -delay "$DELAY" -loop "$LOOP" $frames_sorted -layers Optimize "$out"
+  convert -delay "$DELAY" -loop "$LOOP" $frames_sorted -layers Optimize "$out"
 done
 

@@ -30,20 +30,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Inkscape
+      - name: Install Inkscape & ImageMagick
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y inkscape
+          sudo apt-get install -y inkscape imagemagick
           inkscape --version
-
-      - name: Install ImageMagick 7 (snap)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y snapd
-          sudo snap install core
-          sudo snap install imagemagick --channel=latest/stable
-          magick -version
 
       - name: Export Source SVGs to Output PNGs
         shell: bash
@@ -65,7 +57,7 @@ jobs:
                 inkscape "$svg" --export-type=png --export-filename="$out"
               done
 
-      - name: Export Source SVGs to Output PNGs
+      - name: Make animated GIFs
         shell: bash
         run: |
           set -euo pipefail
