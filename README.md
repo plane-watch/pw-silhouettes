@@ -9,6 +9,12 @@ The primary goal is to keep silhouettes consistent, clean, and easy to update ov
 The eventual idea is to have a CI/CD workflow that uses ImageMagick or similar to iterate
 through these files and rasterise into a spritesheet.
 
+## Directories
+
+The "Output" directory is automatically populated by the "Export SVGs to PNGs" action.
+
+The "Source SVGs" directory is where the source files go.
+
 ## File format
 
 All silhouettes are stored as SVG files (Inkscape-native).
@@ -62,6 +68,6 @@ Notes:
 * Finalise:
   * Under "Layers and Objects", hide the "Reference Artwork" layer.
   * Select the outline, go to Align and Distribute, center the outline vertically and horizontally with reference to the page.
-  * Save your work:
+  * Save your work in the "Source SVGs" directory:
     * The filename should be the IATA code in all caps, followed by ".svg" (eg: A140.svg).
     * The file type should be "Inkscape SVG"
