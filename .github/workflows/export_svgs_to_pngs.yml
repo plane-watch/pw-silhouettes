@@ -56,6 +56,13 @@ jobs:
                 inkscape "$svg" --export-type=png --export-filename="$out"
               done
 
+      - name: Export Source SVGs to Output PNGs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd Output
+          bash ../make-gifs.sh
+
       - name: Commit generated PNGs
         shell: bash
         run: |
