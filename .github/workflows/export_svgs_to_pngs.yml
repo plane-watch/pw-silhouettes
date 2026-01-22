@@ -32,9 +32,11 @@ jobs:
 
       - name: Install Inkscape
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y inkscape
+          sudo apt-get install -y inkscape imagemagick
           inkscape --version
+          magick --version
 
       - name: Export Source SVGs to Output PNGs
         shell: bash
