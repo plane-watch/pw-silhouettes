@@ -34,9 +34,16 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y inkscape imagemagick
+          sudo apt-get install -y inkscape
           inkscape --version
-          magick --version
+
+      - name: Install ImageMagick 7 (snap)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y snapd
+          sudo snap install core
+          sudo snap install imagemagick --channel=latest/stable
+          magick -version
 
       - name: Export Source SVGs to Output PNGs
         shell: bash
