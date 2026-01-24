@@ -19,6 +19,15 @@ Please contact the project maintainers if you wish to use these assets in a comm
 
 Contributors agree that their contributions are licensed under CC BY-NC-SA 4.0 and may also be included in commercial licences issued by the project maintainers.
 
+## Reference Artwork Notice
+
+Some SVG files in this repository may contain a "Reference Artwork" layer used during the creation of silhouettes. These reference images were sourced from
+publicly available materials such as aircraft three-view diagrams, manufacturer data sheets and brouchures.
+
+These reference images are used solely as visual guides during the tracing process and are **not part of the final silhouette artwork**. The reference layers may be removed at any time and are not required for use of the silhouettes.
+
+We do not claim ownership of any third-party reference images, and no rights to those materials are granted by this repository. The Creative Commons license applies **only to the original silhouette artwork and associated metadata** created for this project.
+
 ## Airframe JSON format
 
 Each ICAO airframe has a JSON file that defines how Plane Watch should render that airframe’s silhouette (and any animation frames) at runtime.
