@@ -46,7 +46,7 @@ Silhouettes are designed to be rasterised into 70×70 px sprites, with outlines 
 
 ### Field reference
 
-### `version` (integer, optional)
+#### `version` (integer, optional)
 
 Schema version for the JSON file. If omitted, the effective version is `1`.
 
