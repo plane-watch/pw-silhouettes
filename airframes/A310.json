@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A310",
+    "typeCode": "L2J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 28 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A310.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}
