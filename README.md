@@ -6,6 +6,19 @@ The primary goal is to keep silhouettes consistent, clean, and easy to update ov
 
 The eventual idea is to have a CI/CD workflow that uses ImageMagick or similar to iterate through these files and rasterise into a spritesheet.
 
+## License
+
+All silhouettes, artwork, and metadata in this repository are licensed under
+[**Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International (CC BY-NC-SA 4.0)**](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+Commercial use is not permitted under this license. This includes use by commercial
+services such as flight tracking platforms.
+
+**Commercial licensing is available upon request.**
+Please contact the project maintainers if you wish to use these assets in a commercial product or service.
+
+Contributors agree that their contributions are licensed under CC BY-NC-SA 4.0 and may also be included in commercial licences issued by the project maintainers.
+
 ## Airframe JSON format
 
 Each ICAO airframe has a JSON file that defines how Plane Watch should render that airframe’s silhouette (and any animation frames) at runtime.
