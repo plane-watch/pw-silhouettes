@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A388",
+    "typeCode": "L4J",
+    "wakeCategory": "J"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 28 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A388.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

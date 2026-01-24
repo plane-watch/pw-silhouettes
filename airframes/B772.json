@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "B772",
+    "typeCode": "L2J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 32 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/B772.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

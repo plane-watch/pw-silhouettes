@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A124",
+    "typeCode": "L4J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 36, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A124.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

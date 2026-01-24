@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "HAWK",
+    "typeCode": "L1J",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 37 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/HAWK.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "PC21",
+    "typeCode": "L1T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/PC21-1.svg" },
+      { "src": "silhouettes/PC21-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

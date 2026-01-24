@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A30B",
+    "typeCode": "L2J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": "A306",
+  "notes": "At 70x70 pixels, the Airbus A300B2/A300B4/A300C4 look the same as the Airbus A300-600."
+}

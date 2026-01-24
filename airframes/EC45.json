@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "EC45",
+    "typeCode": "H2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 28 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/EC45-1.svg" },
+      { "src": "silhouettes/EC45-2.svg" },
+      { "src": "silhouettes/EC45-3.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

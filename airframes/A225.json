@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A225",
+    "typeCode": "L6J",
+    "wakeCategory": "J"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 28 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A20N.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

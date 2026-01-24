@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "SONX",
+    "typeCode": "L1P",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 30 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/SONX-1.svg" },
+      { "src": "silhouettes/SONX-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

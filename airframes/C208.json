@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "C208",
+    "typeCode": "L1T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 30 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/C208-1.svg" },
+      { "src": "silhouettes/C208-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

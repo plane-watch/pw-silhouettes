@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "GLEX",
+    "typeCode": "L2J",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 31 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/GLEX.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

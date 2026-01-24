@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "C441",
+    "typeCode": "L2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 31 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/C441-1.svg" },
+      { "src": "silhouettes/C441-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

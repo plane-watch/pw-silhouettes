@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "F28",
+    "typeCode": "L2J",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/F28.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "F100",
+    "typeCode": "L2J",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 33 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/F100.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

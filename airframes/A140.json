@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A140",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 33 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A140-1.svg" },
+      { "src": "silhouettes/A140-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
