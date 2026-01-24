@@ -1,8 +1,8 @@
 {
   "version": 1,
   "icao": {
-    "designator": "A332",
-    "typeCode": "L2J",
+    "designator": "A345",
+    "typeCode": "L4J",
     "wakeCategory": "H"
   },
   "aliasOf": null,
@@ -13,7 +13,7 @@
   },
   "art": {
     "frames": [
-      { "src": "silhouettes/A332.svg" }
+      { "src": "silhouettes/A345.svg" }
     ],
     "frameTime": null
   },

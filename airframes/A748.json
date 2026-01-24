@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A748",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 33 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A748-1.svg" },
+      { "src": "silhouettes/A748-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

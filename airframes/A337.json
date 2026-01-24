@@ -1,19 +1,19 @@
 {
   "version": 1,
   "icao": {
-    "designator": "A332",
+    "designator": "A337",
     "typeCode": "L2J",
     "wakeCategory": "H"
   },
   "aliasOf": null,
   "render": {
     "scale": 1,
-    "anchor": { "x": 35, "y": 31 },
+    "anchor": { "x": 35, "y": 32 },
     "noRotate": false
   },
   "art": {
     "frames": [
-      { "src": "silhouettes/A332.svg" }
+      { "src": "silhouettes/A337.svg" }
     ],
     "frameTime": null
   },
