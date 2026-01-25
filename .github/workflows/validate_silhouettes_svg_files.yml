@@ -1,4 +1,4 @@
-name: Validate airframe JSON files
+name: Validate silhouette SVG files
 
 on:
   workflow_dispatch: {}
