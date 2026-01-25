@@ -72,10 +72,10 @@ func ValidateSVG(path string, strokeWidthTol, sizeTol float64) ([]Issue, error) 
 	// Visibility stack (effective hidden state), starting at "not hidden"
 	hiddenStack := []bool{false}
 
-	// Style stack: inherited properties (only for visible nodes)
+	// Style stack: inherited properties (only meaningful for visible nodes)
 	styleStack := []map[string]string{map[string]string{}}
 
-	// If we enter a hidden subtree, we skip work until we exit it.
+	// If we enter a hidden subtree, we skip *all* checks and style processing until we exit it.
 	skipDepth := 0
 
 	seenRootSVG := false
@@ -93,39 +93,42 @@ func ValidateSVG(path string, strokeWidthTol, sizeTol float64) ([]Issue, error) 
 		case xml.StartElement:
 			line := decoderLine(dec)
 
-			// Determine parent state
+			// Determine parent hidden state
 			parentHidden := hiddenStack[len(hiddenStack)-1]
-			parentStyle := styleStack[len(styleStack)-1]
 
-			// Determine if this element is hidden by itself
 			attrs := t.Attr
 			thisHidden := elementHidden(attrs)
 			effectiveHidden := parentHidden || thisHidden
 
-			// Push stacks
+			// Always push hidden state so EndElement pops stay aligned.
 			hiddenStack = append(hiddenStack, effectiveHidden)
 
-			// Style inheritance: if hidden, we can just push the parent style (won't be used)
-			// If visible, merge parentStyle + this element's style/attrs.
-			var thisStyle map[string]string
-			if effectiveHidden {
-				thisStyle = parentStyle
-			} else {
-				thisStyle = mergeStyles(parentStyle, styleFrom(attrs))
-			}
-			styleStack = append(styleStack, thisStyle)
-
-			// If we're already skipping, just track depth and continue
+			// If we're already skipping, we do *nothing* (including style processing).
+			// Just track depth so we know when we leave the skipped subtree.
 			if skipDepth > 0 {
 				skipDepth++
+				// Keep styleStack aligned too (push a dummy entry). It will be popped on EndElement.
+				styleStack = append(styleStack, styleStack[len(styleStack)-1])
 				continue
 			}
 
+			// NEW: ignore everything under <defs>
+			ignoreSubtree := t.Name.Local == "defs"
+
 			// If this element is hidden, begin skipping its subtree entirely.
-			if effectiveHidden {
+			// We also keep styleStack aligned with a dummy push.
+			if effectiveHidden || ignoreSubtree {
 				skipDepth = 1
+				styleStack = append(styleStack, styleStack[len(styleStack)-1])
 				continue
 			}
+
+			// ---- From here down: we are visible and not under any hidden ancestor ----
+
+			// Compute style only for visible elements
+			parentStyle := styleStack[len(styleStack)-1]
+			thisStyle := mergeStyles(parentStyle, styleFrom(attrs))
+			styleStack = append(styleStack, thisStyle)
 
 			// Root <svg> width/height check (first svg element we see)
 			if !seenRootSVG && t.Name.Local == "svg" {
@@ -149,21 +152,22 @@ func ValidateSVG(path string, strokeWidthTol, sizeTol float64) ([]Issue, error) 
 				}
 			}
 
-			// Now do element checks (only for visible elements)
+			// Element checks (only for visible elements)
 			switch t.Name.Local {
 			case "image":
 				issues = append(issues, Issue{File: path, Line: line, Msg: "visible <image> found (reference artwork must be hidden)"})
 
 			case "path", "rect", "circle", "ellipse", "polygon", "polyline", "line":
-				// Validate style properties
 				issues = append(issues, validateDrawable(path, line, t.Name.Local, thisStyle, strokeWidthTol)...)
 			}
 
 		case xml.EndElement:
-			// Pop stacks
+			// Pop hidden stack
 			if len(hiddenStack) > 1 {
 				hiddenStack = hiddenStack[:len(hiddenStack)-1]
 			}
+
+			// Pop style stack (kept aligned even when skipping)
 			if len(styleStack) > 1 {
 				styleStack = styleStack[:len(styleStack)-1]
 			}
@@ -176,7 +180,7 @@ func ValidateSVG(path string, strokeWidthTol, sizeTol float64) ([]Issue, error) 
 	}
 
 	// If the SVG never had a root <svg>, it’s malformed (but the parser would likely have errored)
-	if !seenRootSVG && !seenRootSVG {
+	if !seenRootSVG {
 		issues = append(issues, Issue{File: path, Line: 1, Msg: "no <svg> root element found"})
 	}
 
