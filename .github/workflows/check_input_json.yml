@@ -1,0 +1,39 @@
+name: Validate airframe JSON schemas
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+    paths:
+      - "airframes/**/*.json"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install check-jsonschema
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --user --upgrade pip pipx
+          python3 -m pipx ensurepath
+          # pipx installs into ~/.local/bin
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install check-jsonschema==0.36.0
+
+      - name: Validate airframes JSON files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          schema="./schemas/airframe.input.runtime.v1.schema.json"
+
+          # Find all JSON files under airframes and validate them.
+          # If any validation fails, the step (and workflow) fails.
+          find ./airframes -type f -name '*.json' -exec check-jsonschema --schemafile "${schema}" "{}" \;
