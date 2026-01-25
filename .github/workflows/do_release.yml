@@ -45,7 +45,7 @@ jobs:
 
           ./build_spritesheet \
             --inkscape_binary "$(which inkscape)" \
-            --output_png ./spritesheet.png
+            --output_png ./spritesheet.png \
             --output_json ./spritesheet.json
 
           ls -lah ./spritesheet.png
