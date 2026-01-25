@@ -36,4 +36,4 @@ jobs:
 
           # Find all JSON files under airframes and validate them.
           # If any validation fails, the step (and workflow) fails.
-          find ./airframes -type f -name '*.json' -exec check-jsonschema --schemafile "${schema}" "{}" \;
+          find ./airframes -type f -name '*.json' -exec check-jsonschema --verbose --schemafile "${schema}" "{}" \;
