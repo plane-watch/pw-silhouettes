@@ -1,15 +1,16 @@
 package main
 
 import (
-	"build_spritesheet/lib/airframe"
 	"bytes"
 	"context"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/png"
 	"math"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -25,13 +26,13 @@ const (
 	spriteHeight = 72
 )
 
-func airframesFromDir(dir string) ([]*airframe.Airframe, error) {
+func airframesFromDir(dir string) ([]*Airframe, error) {
 	listing, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read dir: %w", err)
 	}
 
-	out := make([]*airframe.Airframe, 0, len(listing))
+	out := make([]*Airframe, 0, len(listing))
 
 	for _, entry := range listing {
 		if entry.IsDir() {
@@ -43,7 +44,7 @@ func airframesFromDir(dir string) ([]*airframe.Airframe, error) {
 			continue
 		}
 
-		af, err := airframe.FromFile(filepath.Join(dir, entry.Name()))
+		af, err := AirframeFromFile(filepath.Join(dir, entry.Name()))
 		if err != nil {
 			return nil, fmt.Errorf("failed to process file: %w", err)
 		}
@@ -57,7 +58,7 @@ func airframesFromDir(dir string) ([]*airframe.Airframe, error) {
 	return out, nil
 }
 
-func buildSpriteMap(airframes []*airframe.Airframe, idOffset int) map[string]int {
+func buildSpriteMap(airframes []*Airframe, idOffset int) map[string]int {
 	spriteSet := make(map[string]int)
 	n := 0 + idOffset
 	for _, af := range airframes {
@@ -141,6 +142,42 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 		}
 	}
 
+	// Prepare output JSON
+	out := new(Output)
+	out.Version = 1
+	out.Metadata = Metadata{
+		PNG:          cmd.String("output_png"),
+		SpriteWidth:  spriteWidth,
+		SpriteHeight: spriteHeight,
+	}
+	out.AirframeToSprite = make(map[string]string, len(airframes))
+	out.Sprites = make(map[string]Sprite, len(newSprites))
+	for _, af := range airframes {
+		if af.AliasOf != nil {
+			out.AirframeToSprite[af.ICAO.Designator] = *af.AliasOf
+			continue
+		}
+
+		// create the sprite
+		s := Sprite{
+			IDs:      make([]int, 0, 4),
+			Scale:    af.Render.Scale,
+			Anchor:   af.Render.Anchor,
+			NoRotate: af.Render.NoRotate,
+		}
+		if af.Art.FrameTime != 0 {
+			s.FrameTime = &af.Art.FrameTime
+		}
+		// add sprite IDs
+		for _, src := range af.Art.Frames {
+			s.IDs = append(s.IDs, newSprites[src.Src])
+		}
+		// add sprite to output
+		out.Sprites[af.ICAO.Designator] = s
+		// add airframe to output
+		out.AirframeToSprite[af.ICAO.Designator] = af.ICAO.Designator
+	}
+
 	// Finally, write the new spritesheet
 	buf := new(bytes.Buffer)
 	err = png.Encode(buf, newImg)
@@ -150,6 +187,16 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 	err = os.WriteFile(cmd.String("output_png"), buf.Bytes(), 0644)
 	if err != nil {
 		return fmt.Errorf("failed to write new spritesheet: %w", err)
+	}
+
+	// Finally finally, write the new JSON
+	jb, err := json.MarshalIndent(out, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal new spritesheet json: %w", err)
+	}
+	err = os.WriteFile(cmd.String("output_json"), jb, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write new spritesheet json: %w", err)
 	}
 
 	return nil
@@ -172,7 +219,7 @@ func drawSVGOnto(src string, dst image.Image, offsetX, offsetY int, inkscapeBina
 
 	tmpPngPath := filepath.Join(tmpDir, "out.png")
 
-	if err := convertSVGtoPNG(inkscapeBinary, src, tmpPngPath); err != nil {
+	if err := inkscapeConvertSVGtoPNG(inkscapeBinary, src, tmpPngPath); err != nil {
 		return fmt.Errorf("failed to convert SVG to PNG: %w", err)
 	}
 
@@ -223,4 +270,45 @@ func TopLeft(index, sheetW, frameW, frameH, margin, padding int) (x, y int, err 
 	x = margin + col*(frameW+padding)
 	y = margin + row*(frameH+padding)
 	return x, y, nil
+}
+
+func AirframeFromFile(filename string) (*Airframe, error) {
+	b, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file: %w", err)
+	}
+	af := new(Airframe)
+	err = json.Unmarshal(b, af)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal airframe: %w", err)
+	}
+	return af, nil
+}
+
+func inkscapeConvertSVGtoPNG(inkscapeBinary, src, dst string) error {
+	cmd := exec.Command(
+		inkscapeBinary,
+		src,
+		"--export-type=png",
+		"--export-overwrite",
+		"--export-filename="+dst,
+	)
+
+	out, err := cmd.CombinedOutput()
+
+	// Inkscape sometimes logs useful info even on "success".
+	if err != nil {
+		return fmt.Errorf("inkscape failed: %w\noutput:\n%s", err, out)
+	}
+
+	// Don’t assume success: ensure the file exists and is non-zero.
+	st, statErr := os.Stat(dst)
+	if statErr != nil {
+		return fmt.Errorf("inkscape produced no output file: %v\noutput:\n%s", statErr, out)
+	}
+	if st.Size() == 0 {
+		return fmt.Errorf("inkscape produced empty output file (%s)\noutput:\n%s", dst, out)
+	}
+
+	return nil
 }

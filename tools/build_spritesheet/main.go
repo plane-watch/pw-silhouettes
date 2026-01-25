@@ -18,6 +18,7 @@ var cmd = &cli.Command{
 			Aliases: []string{"afp"},
 			Usage:   "Path to the airframes JSON directory",
 			Value:   "airframes/",
+			Hidden:  true,
 		},
 		&cli.StringFlag{
 			Name:     "inkscape_binary",
@@ -27,8 +28,14 @@ var cmd = &cli.Command{
 		},
 		&cli.StringFlag{
 			Name:     "output_png",
-			Aliases:  []string{"o"},
+			Aliases:  []string{"op"},
 			Usage:    "Path to the output png file",
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "output_json",
+			Aliases:  []string{"oj"},
+			Usage:    "Path to the output json file",
 			Required: true,
 		},
 	},
