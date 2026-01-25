@@ -1,4 +1,4 @@
-module build_spritesheet
+module svg_check
 
 go 1.25.5
 
