@@ -1,0 +1,72 @@
+name: Validate airframe JSON files
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+    paths:
+      - "airframes/**/*.json"
+
+jobs:
+
+  discover:
+    name: Discover files to validate
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.set-matrix.outputs.files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build matrix
+        id: set-matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base="${{ github.event.pull_request.base.sha }}"
+            head="${{ github.sha }}"
+            files=$(git diff --name-only "$base" "$head" -- 'airframes/**/*.json' | sort -u)
+          else
+            files=$(find airframes -type f -name '*.json' | sort -u)
+          fi
+
+          if [[ -z "$files" ]]; then
+            echo 'files=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Convert newline list → JSON array
+          printf '%s\n' "$files" | jq -R -s -c 'split("\n")[:-1]' \
+            | awk '{print "files=" $0}' >> "$GITHUB_OUTPUT"
+
+  validate:
+    name: Validate (${{ matrix.file }})
+    runs-on: ubuntu-latest
+    needs: discover
+    if: ${{ needs.discover.outputs.files != '[]' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJSON(needs.discover.outputs.files) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install check-jsonschema
+        run: |
+          python3 -m pip install --user --upgrade pip pipx
+          python3 -m pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install check-jsonschema
+
+      - name: Validate JSON
+        run: |
+          schema="./schemas/airframe.input.runtime.v1.schema.json"
+          echo "Validating: ${{ matrix.file }}"
+          check-jsonschema --schemafile "${schema}" "${{ matrix.file }}"
