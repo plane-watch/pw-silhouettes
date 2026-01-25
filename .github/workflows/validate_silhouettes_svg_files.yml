@@ -88,4 +88,5 @@ jobs:
 
       - name: Validate SVG
         run: |
+          chmod a+x ./svg_check
           ./svg_check --svg "${{ matrix.file }}"
