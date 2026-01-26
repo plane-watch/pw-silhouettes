@@ -25,9 +25,9 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
      showguides="false"
-     inkscape:zoom="5.7228957"
-     inkscape:cx="30.31682"
-     inkscape:cy="35.12208"
+     inkscape:zoom="7.6792851"
+     inkscape:cx="33.010885"
+     inkscape:cy="32.815555"
      inkscape:window-width="1512"
      inkscape:window-height="869"
      inkscape:window-x="0"
@@ -52,11 +52,11 @@
      id="layer2"
      inkscape:label="Outline"
      transform="translate(0.0322292,0.99928302)"><path
-       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
        d="m 10.437007,4.6121632 h 2.107282"
        id="path2"
        inkscape:label="prop2" /><path
-       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
        d="M 5.9030115,4.6121632 H 8.010293"
        id="path2-2"
        inkscape:label="prop1" /><path
