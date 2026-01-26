@@ -23,7 +23,7 @@ jobs:
           cd tools/svg_check
           go build -o svg_check .
       - name: Upload svg_check
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: svgcheck-linux
           path: tools/svg_check/svg_check
