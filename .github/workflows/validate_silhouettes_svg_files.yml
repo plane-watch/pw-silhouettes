@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: tools/go.sum
       - name: Build svg_check
         run: |
-          go -C tools build -o ./svg_check ./tools/svg_check
+          go -C tools build -o ./svg_check ./svg_check
       - name: Upload svg_check
         uses: actions/upload-artifact@v6
         with:
