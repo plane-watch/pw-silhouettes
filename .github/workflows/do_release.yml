@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          go -C tools build -o ./build_spritesheet ./tools/build_spritesheet
+          go -C tools build -o ./build_spritesheet ./build_spritesheet
 
       - name: Run build_spritesheet (from repo root)
         shell: bash
