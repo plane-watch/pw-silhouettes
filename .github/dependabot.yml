@@ -1,0 +1,42 @@
+version: 2
+
+updates:
+  # ------------------------------------------------------------
+  # GitHub Actions (workflows)
+  # ------------------------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "ci"
+
+  # ------------------------------------------------------------
+  # Go modules — build_spritesheet tool
+  # ------------------------------------------------------------
+  - package-ecosystem: "gomod"
+    directory: "/tools/build_spritesheet"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps(build_spritesheet)"
+    labels:
+      - "dependencies"
+      - "go"
+
+  # ------------------------------------------------------------
+  # Go modules — svg_check tool
+  # ------------------------------------------------------------
+  - package-ecosystem: "gomod"
+    directory: "/tools/svg_check"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps(svg_check)"
+    labels:
+      - "dependencies"
+      - "go"
