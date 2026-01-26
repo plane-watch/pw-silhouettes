@@ -42,7 +42,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ./build_spritesheet --inkscape_binary "$(which inkscape)" --output_png ./spritesheet.png --output_json ./spritesheet.json
+          ./tools/build_spritesheet/build_spritesheet --inkscape_binary "$(which inkscape)" --output_png ./spritesheet.png --output_json ./spritesheet.json
 
           ls -lah ./spritesheet.png
           ls -lah ./spritesheet.json
