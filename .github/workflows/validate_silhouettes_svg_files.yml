@@ -47,13 +47,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            base="${{ github.event.pull_request.base.sha }}"
-            head="${{ github.sha }}"
-            files=$(git diff --name-only "$base" "$head" -- 'silhouettes/**/*.svg' | sort -u)
-          else
-            files=$(find silhouettes -type f -name '*.svg' | sort -u)
-          fi
+          files=$(find silhouettes -type f -name '*.svg' | sort -u)
 
           if [[ -z "$files" ]]; then
             echo 'files=[]' >> "$GITHUB_OUTPUT"
