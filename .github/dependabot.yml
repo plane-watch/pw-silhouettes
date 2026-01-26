@@ -16,27 +16,14 @@ updates:
       - "ci"
 
   # ------------------------------------------------------------
-  # Go modules — build_spritesheet tool
+  # Go modules - tools
   # ------------------------------------------------------------
   - package-ecosystem: "gomod"
-    directory: "/tools/build_spritesheet"
+    directory: "/tools"
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "deps(build_spritesheet)"
-    labels:
-      - "dependencies"
-      - "go"
-
-  # ------------------------------------------------------------
-  # Go modules — svg_check tool
-  # ------------------------------------------------------------
-  - package-ecosystem: "gomod"
-    directory: "/tools/svg_check"
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "deps(svg_check)"
+      prefix: "deps(tools)"
     labels:
       - "dependencies"
       - "go"

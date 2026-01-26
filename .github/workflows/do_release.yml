@@ -21,6 +21,7 @@ jobs:
         with:
           go-version: "1.25"
           cache: true
+          cache-dependency-path: tools/go.sum
 
       - name: Install Inkscape (v1+)
         shell: bash
@@ -34,9 +35,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dist
-          cd tools/build_spritesheet
-          go build -o ../../build_spritesheet .
+          go -C tools build -o ./build_spritesheet ./tools/build_spritesheet
 
       - name: Run build_spritesheet (from repo root)
         shell: bash

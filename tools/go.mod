@@ -1,4 +1,4 @@
-module build_spritesheet
+module github.com/plane-watch/pw-silhouettes
 
 go 1.25.5
 
