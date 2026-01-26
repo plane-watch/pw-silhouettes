@@ -25,7 +25,7 @@ jobs:
       - name: Upload svg_check
         uses: actions/upload-artifact@v6
         with:
-          name: svgcheck-linux
+          name: svg_check
           path: ./tools/svg_check/svg_check
           if-no-files-found: error
 
