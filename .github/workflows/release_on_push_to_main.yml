@@ -182,6 +182,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          chmod a+x ./build_spritesheet
           ./build_spritesheet --inkscape_binary "$(which inkscape)" --output_png ./spritesheet.png --output_json ./spritesheet.json
           ls -lah ./spritesheet.png
           ls -lah ./spritesheet.json
