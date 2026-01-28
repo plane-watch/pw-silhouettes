@@ -108,51 +108,6 @@ jobs:
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           echo "prev=${prev}" >> "$GITHUB_OUTPUT"
 
-      - name: Create and push tag
-        if: steps.skip.outputs.skip != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          TAG="${{ steps.tag.outputs.tag }}"
-
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git tag -a "${TAG}" -m "Release ${TAG}"
-          git push origin "${TAG}"
-
-      - name: Generate release notes (same as GitHub UI)
-        if: steps.skip.outputs.skip != 'true'
-        id: notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          TAG="${{ steps.tag.outputs.tag }}"
-          PREV="${{ steps.tag.outputs.prev }}"
-          SHA="${{ github.event.workflow_run.head_sha }}"
-
-          if [[ -n "${PREV}" ]]; then
-            resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
-              -f tag_name="${TAG}" \
-              -f previous_tag_name="${PREV}" \
-              -f target_commitish="${SHA}")"
-          else
-            resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
-              -f tag_name="${TAG}" \
-              -f target_commitish="${SHA}")"
-          fi
-
-          body="$(echo "${resp}" | jq -r '.body // ""')"
-
-          delim="RELEASE_NOTES_$(date +%s%N)"
-          {
-            echo "body<<${delim}"
-            echo "${body}"
-            echo "${delim}"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Create GitHub Release
         if: steps.skip.outputs.skip != 'true'
         env:
@@ -161,12 +116,10 @@ jobs:
         run: |
           set -euo pipefail
           TAG="${{ steps.tag.outputs.tag }}"
-
-          # Create the release (notes already generated above)
-          gh api -X POST "repos/${GITHUB_REPOSITORY}/releases" \
-            -f tag_name="${TAG}" \
-            -f target_commitish="${{ github.event.workflow_run.head_sha }}" \
-            -f name="${TAG}" \
-            -f body="${{ steps.notes.outputs.body }}" \
-            -F draft=false \
-            -F prerelease=false
+          
+          # Create the release using gh, which triggers the release event properly
+          gh release create "${TAG}" \
+            --fail-on-no-commits \
+            --target "${{ github.event.workflow_run.head_sha }}" \
+            --title "${TAG}" \
+            --generate-notes
