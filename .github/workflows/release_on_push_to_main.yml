@@ -131,28 +131,26 @@ jobs:
           set -euo pipefail
           TAG="${{ steps.tag.outputs.tag }}"
           PREV="${{ steps.tag.outputs.prev }}"
+          SHA="${{ github.event.workflow_run.head_sha }}"
 
-          # If there is no previous tag yet, omit previous_tag_name.
           if [[ -n "${PREV}" ]]; then
             resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
               -f tag_name="${TAG}" \
               -f previous_tag_name="${PREV}" \
-              -f target_commitish="${{ github.event.workflow_run.head_sha }}")"
+              -f target_commitish="${SHA}")"
           else
             resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
               -f tag_name="${TAG}" \
-              -f target_commitish="${{ github.event.workflow_run.head_sha }}")"
+              -f target_commitish="${SHA}")"
           fi
 
-          name="$(echo "${resp}" | jq -r '.name')"
-          body="$(echo "${resp}" | jq -r '.body')"
+          body="$(echo "${resp}" | jq -r '.body // ""')"
 
-          # Use the tag as the release title/name
-          echo "name=${TAG}" >> "$GITHUB_OUTPUT"
+          delim="RELEASE_NOTES_$(date +%s%N)"
           {
-            echo "body<<'EOF'"
+            echo "body<<${delim}"
             echo "${body}"
-            echo "EOF"
+            echo "${delim}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
