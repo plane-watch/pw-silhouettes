@@ -1,61 +1,175 @@
 name: Create release on push to main
 
 on:
-  workflow_run:
-    workflows:
-      - Validate Airframe JSON Files
-      - Validate Silhouettes SVG Files
-    types:
-      - completed
+  push:
+    branches: [ main ]
+    paths:
+      - "airframes/**/*.json"
+      - "silhouettes/**/*.svg"
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Create a release"
+        type: boolean
+        default: true
 
 permissions:
   contents: write  # needed to push tags and create releases
-  actions: read
 
 concurrency:
   group: release-main
   cancel-in-progress: false
 
 jobs:
-  release:
 
-    # Only run if:
-    # 1) The validation workflows succeeded
-    # 2) It was a run on the main branch
-    if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main'
+  build-tooling:
+    name: Build tooling
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+          cache: true
+          cache-dependency-path: tools/go.sum
+      - name: Build svg_check
+        run: |
+          go -C tools build -o ./svg_check ./svg_check
+      - name: Upload svg_check
+        uses: actions/upload-artifact@v6
+        with:
+          name: svg_check
+          path: ./tools/svg_check/svg_check
+          if-no-files-found: error
 
+  discover-svg:
+    name: Discover files to validate
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.set-matrix.outputs.files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Build matrix
+        id: set-matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          files=$(find silhouettes -type f -name '*.svg' | sort -u)
+
+          if [[ -z "$files" ]]; then
+            echo 'files=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Convert newline list → JSON array
+          printf '%s\n' "$files" | jq -R -s -c 'split("\n")[:-1]' \
+            | awk '{print "files=" $0}' >> "$GITHUB_OUTPUT"
+
+  discover-json:
+    name: Discover JSON files to validate
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.set-matrix.outputs.files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Build matrix
+        id: set-matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          files=$(find airframes -type f -name '*.json' | sort -u)
+
+          if [[ -z "$files" ]]; then
+            echo 'files=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Convert newline list → JSON array
+          printf '%s\n' "$files" | jq -R -s -c 'split("\n")[:-1]' \
+            | awk '{print "files=" $0}' >> "$GITHUB_OUTPUT"
+
+  validate-json:
+    name: Validate (${{ matrix.file }})
+    runs-on: ubuntu-latest
+    needs: discover-json
+    if: ${{ needs.discover-json.outputs.files != '[]' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJSON(needs.discover-json.outputs.files) }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install check-jsonschema
+        run: |
+          python3 -m pip install --user --upgrade pip pipx
+          python3 -m pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pipx install check-jsonschema
+
+      - name: Validate JSON
+        run: |
+          schema="./schemas/airframe.input.runtime.v1.schema.json"
+          echo "Validating: ${{ matrix.file }}"
+          check-jsonschema --schemafile "${schema}" "${{ matrix.file }}"
+
+  validate-svg:
+    name: Validate (${{ matrix.file }})
+    runs-on: ubuntu-latest
+    needs:
+      - discover-svg
+      - build-tooling
+    if: ${{ needs.discover-svg.outputs.files != '[]' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJSON(needs.discover-svg.outputs.files) }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download svg_check
+        uses: actions/download-artifact@v7
+        with:
+          name: svg_check
+          path: ./
+
+      - name: Validate SVG
+        run: |
+          chmod a+x ./svg_check
+          ./svg_check --svg "${{ matrix.file }}"
+
+  release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs: [ validate-json, validate-svg, discover-json, discover-svg ]
+    if: (github.event_name != 'workflow_dispatch' || github.event.inputs.release == 'true') && (
+      (needs.validate-json.result == 'success' || needs.discover-json.outputs.files == '[]') &&
+      (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]')
+      )
     steps:
 
       - name: Ensure jq is available
         run: jq --version
 
-      - name: Ensure both validations succeeded for this commit
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          sha="${{ github.event.workflow_run.head_sha }}"
-
-          # Look up the most recent completed run for each workflow at this exact SHA
-          airframe="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/validate_airframe_json_files.yml/runs?event=push&branch=main&per_page=50" \
-            | jq -r --arg sha "$sha" '.workflow_runs[] | select(.head_sha==$sha) | .conclusion' | head -n1)"
-          silhouettes="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/validate_silhouettes_svg_files.yml/runs?event=push&branch=main&per_page=50" \
-            | jq -r --arg sha "$sha" '.workflow_runs[] | select(.head_sha==$sha) | .conclusion' | head -n1)"
-
-          echo "airframe conclusion: ${airframe:-<none>}"
-          echo "silhouettes conclusion: ${silhouettes:-<none>}"
-
-          [[ "$airframe" == "success" ]] || { echo "Airframe validation not successful"; exit 1; }
-          [[ "$silhouettes" == "success" ]] || { echo "Silhouettes validation not successful"; exit 1; }      
-
       - name: Checkout (with full history + tags)
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
           fetch-tags: true
 
@@ -64,7 +178,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sha="${{ github.event.workflow_run.head_sha }}"
+          sha="${{ github.sha }}"
 
           existing="$(git tag --points-at "$sha" | grep -E '^[0-9]{8}(\.[0-9]+)?$' || true)"
           if [[ -n "$existing" ]]; then
@@ -119,7 +233,6 @@ jobs:
           
           # Create the release using gh, which triggers the release event properly
           gh release create "${TAG}" \
-            --fail-on-no-commits \
-            --target "${{ github.event.workflow_run.head_sha }}" \
+            --target "${{ github.sha }}" \
             --title "${TAG}" \
             --generate-notes
