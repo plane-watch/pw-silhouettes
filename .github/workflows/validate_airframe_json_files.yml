@@ -8,6 +8,8 @@ on:
       - "airframes/**/*.json"
   push:
     branches: [ main ]
+    paths:
+      - "airframes/**/*.json"
 
 jobs:
 

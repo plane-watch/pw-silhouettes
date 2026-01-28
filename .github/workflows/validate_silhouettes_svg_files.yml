@@ -8,6 +8,8 @@ on:
       - "silhouettes/**/*.svg"
   push:
     branches: [ main ]
+    paths:
+      - "airframes/**/*.json"
 
 jobs:
 
