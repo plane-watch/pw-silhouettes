@@ -31,7 +31,7 @@ jobs:
             head="${{ github.event.pull_request.head.sha }}"
           else
             # workflow_dispatch: just validate everything
-            files="$(git ls-files 'airframes/**/*.json' || true)"
+            files="$(find airframes -type f -name '*.json' | sort -u || true)"
             if [[ -z "${files}" ]]; then
               echo "files=[]" >> "$GITHUB_OUTPUT"
               exit 0
