@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - "silhouettes/**/*.svg"
+  push:
+    branches: [ main ]
 
 jobs:
 

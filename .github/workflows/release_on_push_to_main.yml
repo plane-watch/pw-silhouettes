@@ -1,0 +1,174 @@
+name: Create release on push to main
+
+on:
+  workflow_run:
+    workflows:
+      - Validate Airframe JSON Files
+      - Validate Silhouettes SVG Files
+    types:
+      - completed
+
+permissions:
+  contents: write  # needed to push tags and create releases
+  actions: read
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+
+    # Only run if:
+    # 1) The validation workflows succeeded
+    # 2) It was a run on the main branch
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Ensure jq is available
+        run: jq --version
+
+      - name: Ensure both validations succeeded for this commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha="${{ github.event.workflow_run.head_sha }}"
+
+          # Look up the most recent completed run for each workflow at this exact SHA
+          airframe="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/validate_airframe_json_files.yml/runs?event=push&branch=main&per_page=50" \
+            | jq -r --arg sha "$sha" '.workflow_runs[] | select(.head_sha==$sha) | .conclusion' | head -n1)"
+          silhouettes="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/validate_silhouettes_svg_files.yml/runs?event=push&branch=main&per_page=50" \
+            | jq -r --arg sha "$sha" '.workflow_runs[] | select(.head_sha==$sha) | .conclusion' | head -n1)"
+
+          echo "airframe conclusion: ${airframe:-<none>}"
+          echo "silhouettes conclusion: ${silhouettes:-<none>}"
+
+          [[ "$airframe" == "success" ]] || { echo "Airframe validation not successful"; exit 1; }
+          [[ "$silhouettes" == "success" ]] || { echo "Silhouettes validation not successful"; exit 1; }      
+
+      - name: Checkout (with full history + tags)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Skip if this commit already has a release tag
+        id: skip
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha="${{ github.event.workflow_run.head_sha }}"
+
+          existing="$(git tag --points-at "$sha" | grep -E '^[0-9]{8}(\.[0-9]+)?$' || true)"
+          if [[ -n "$existing" ]]; then
+            echo "Commit already has release tag(s):"
+            echo "$existing"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute tag (YYYYMMdd[.n]) in Australia/Perth
+        if: steps.skip.outputs.skip != 'true'
+        id: tag
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Use Perth date for the tag name
+          export TZ="Australia/Perth"
+          base="$(date +%Y%m%d)"
+
+          # Find existing tags for today: base or base.N
+          # Sort "version-like" so 20260128.9 > 20260128.10 works correctly
+          today_tags="$(git tag -l "${base}" "${base}.*" | sort -V || true)"
+
+          if [[ -z "${today_tags}" ]]; then
+            tag="${base}"
+          else
+            last="$(echo "${today_tags}" | tail -n 1)"
+            if [[ "${last}" == "${base}" ]]; then
+              tag="${base}.1"
+            else
+              n="${last##*.}"
+              tag="${base}.$((n + 1))"
+            fi
+          fi
+
+          # Previous tag overall (for changelog range)
+          prev="$(git tag -l '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]*' --sort=-v:refname | head -n 1 || true)"
+
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "prev=${prev}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        if: steps.skip.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.tag }}"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "${TAG}"
+
+      - name: Generate release notes (same as GitHub UI)
+        if: steps.skip.outputs.skip != 'true'
+        id: notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.tag }}"
+          PREV="${{ steps.tag.outputs.prev }}"
+
+          # If there is no previous tag yet, omit previous_tag_name.
+          if [[ -n "${PREV}" ]]; then
+            resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+              -f tag_name="${TAG}" \
+              -f previous_tag_name="${PREV}" \
+              -f target_commitish="${{ github.event.workflow_run.head_sha }}")"
+          else
+            resp="$(gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+              -f tag_name="${TAG}" \
+              -f target_commitish="${{ github.event.workflow_run.head_sha }}")"
+          fi
+
+          name="$(echo "${resp}" | jq -r '.name')"
+          body="$(echo "${resp}" | jq -r '.body')"
+
+          # Use the tag as the release title/name
+          echo "name=${TAG}" >> "$GITHUB_OUTPUT"
+          {
+            echo "body<<'EOF'"
+            echo "${body}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        if: steps.skip.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.tag }}"
+
+          # Create the release (notes already generated above)
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/releases" \
+            -f tag_name="${TAG}" \
+            -f target_commitish="${{ github.event.workflow_run.head_sha }}" \
+            -f name="${TAG}" \
+            -f body="${{ steps.notes.outputs.body }}" \
+            -F draft=false \
+            -F prerelease=false

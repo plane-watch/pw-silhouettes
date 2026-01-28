@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - "airframes/**/*.json"
+  push:
+    branches: [ main ]
 
 jobs:
 
