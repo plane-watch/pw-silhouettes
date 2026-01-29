@@ -1,7 +1,7 @@
 {
   "version": 1,
   "icao": {
-    "designator": "DH8A",
+    "designator": "DH8D",
     "typeCode": "L2T",
     "wakeCategory": "M"
   },
@@ -13,8 +13,8 @@
   },
   "art": {
     "frames": [
-      { "src": "silhouettes/DH8A-1.svg" },
-      { "src": "silhouettes/DH8A-2.svg" }
+      { "src": "silhouettes/DH8D-1.svg" },
+      { "src": "silhouettes/DH8D-2.svg" }
     ],
     "frameTime": 50
   },
