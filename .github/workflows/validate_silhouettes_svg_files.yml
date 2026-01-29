@@ -43,7 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           
-          files="$(find airframes -type f -name '*.svg' | sort -u || true)"
+          files="$(find silhouettes -type f -name '*.svg' | sort -u || true)"
           if [[ -z "${files}" ]]; then
             echo "files=[]" >> "$GITHUB_OUTPUT"
             exit 0
