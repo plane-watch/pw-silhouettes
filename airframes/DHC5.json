@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "DHC5",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/DHC5-1.svg" },
+      { "src": "silhouettes/DHC5-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}

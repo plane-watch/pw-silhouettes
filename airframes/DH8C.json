@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "DH8C",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 30 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/DH8B-1.svg" },
+      { "src": "silhouettes/DH8B-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
