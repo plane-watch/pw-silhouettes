@@ -42,29 +42,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Figure out diff range
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            base="${{ github.event.pull_request.base.sha }}"
-            head="${{ github.event.pull_request.head.sha }}"
-          else
-          # workflow_dispatch: just validate everything
-            files="$(find silhouettes -type f -name '*.svg' | sort -u || true)"
-            if [[ -z "${files}" ]]; then
-              echo "files=[]" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            printf '%s\n' "$files" | jq -R -s -c 'split("\n")[:-1]' \
-              | awk '{print "files=" $0}' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # Collect changed SVG files (added/modified/renamed; exclude deleted)
-          files="$(git diff --name-only --diff-filter=AMR "$base" "$head" -- 'silhouettes/**/*.svg' || true)"
+          
+          files="$(find airframes -type f -name '*.svg' | sort -u || true)"
           if [[ -z "${files}" ]]; then
             echo "files=[]" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           printf '%s\n' "$files" | jq -R -s -c 'split("\n")[:-1]' \
             | awk '{print "files=" $0}' >> "$GITHUB_OUTPUT"
+          exit 0
 
   validate-svg:
     name: Validate (${{ matrix.file }})
