@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A139",
+    "typeCode": "H2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 37, "y": 23 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A139-1.svg" },
+      { "src": "silhouettes/A139-2.svg" },
+      { "src": "silhouettes/A139-3.svg" },
+      { "src": "silhouettes/A139-4.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
