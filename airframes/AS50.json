@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "AS50",
+    "typeCode": "H2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 31, "y": 22 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/AS50-1.svg" },
+      { "src": "silhouettes/AS50-2.svg" },
+      { "src": "silhouettes/AS50-3.svg" },
+      { "src": "silhouettes/AS50-4.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
