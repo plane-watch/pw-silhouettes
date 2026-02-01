@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plane.watch/schemas/generic-airframe-mapping.schema.json",
+  "title": "Plane Watch Generic Airframe Mapping",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "adsb", "aliasOf", "notes"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version for this JSON document."
+    },
+    "adsb": { "$ref": "#/$defs/adsbEmitterCategory" },
+    "aliasOf": {
+      "description": "If non-null, this mapping aliases an existing airframe designator (e.g. B738, B752, B77W, ASK21, SHIP).",
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "render": { "$ref": "#/$defs/render" },
+    "art": { "$ref": "#/$defs/art" },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes about what this mapping represents."
+    }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": { "aliasOf": { "type": "null" } },
+        "required": ["aliasOf"]
+      },
+      "then": {
+        "required": ["render", "art"],
+        "description": "If aliasOf is null, this entry must define its own artwork."
+      },
+      "else": {
+        "description": "If aliasOf is a string, render/art may be omitted (pure alias entry)."
+      }
+    }
+  ],
+
+  "$defs": {
+    "adsbEmitterCategory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["typeCode", "aircraftCategory", "categoryText"],
+      "properties": {
+        "typeCode": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4,
+          "description": "ADS-B emitter type code. Commonly: 2=surface vehicle, 3=other airborne, 4=aircraft."
+        },
+        "aircraftCategory": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "ADS-B emitter aircraft category (subtype)."
+        },
+        "categoryText": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable description of the ADS-B emitter category."
+        }
+      }
+    },
+
+    "render": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scale", "anchor", "noRotate"],
+      "properties": {
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Render scale multiplier."
+        },
+        "anchor": { "$ref": "#/$defs/anchor" },
+        "noRotate": {
+          "type": "boolean",
+          "description": "If true, do not rotate the sprite to match heading."
+        }
+      }
+    },
+
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "art": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frames", "frameTime"],
+      "properties": {
+        "frames": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/frame" }
+        },
+        "frameTime": {
+          "type": ["integer", "null"],
+          "minimum": 1,
+          "description": "Frame duration (units defined by your renderer). Null means 'not animated'."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "frames": { "minItems": 2 } }, "required": ["frames"] },
+          "then": { "properties": { "frameTime": { "type": "integer", "minimum": 1 } } }
+        },
+        {
+          "if": { "properties": { "frames": { "maxItems": 1 } }, "required": ["frames"] },
+          "then": { "properties": { "frameTime": { "type": ["integer", "null"] } } }
+        }
+      ]
+    },
+
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src"],
+      "properties": {
+        "src": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to the SVG/asset for this frame."
+        }
+      }
+    }
+  }
+}
