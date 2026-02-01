@@ -200,7 +200,7 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 
 	// Prepare output JSON
 	out := new(Output)
-	out.Version = 1
+	out.Version = 2
 	out.Metadata = Metadata{
 		PNG:          cmd.String("output_png"),
 		SpriteWidth:  spriteWidth,

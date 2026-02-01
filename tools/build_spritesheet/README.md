@@ -1,10 +1,10 @@
 # ✈️ build_spritesheet
 
-`build_spritesheet` is a small utility that builds a PNG sprite sheet from a directory of airframe definitions.
+`build_spritesheet` is a small utility that builds a PNG sprite sheet from a directory of airframe and generic airframe type definitions.
 
-It reads aircraft definition JSON files, renders their associated SVG silhouettes using **Inkscape**, and packs them into a single spritesheet image. The tool is designed to extend an existing spritesheet as new airframes are added.
+It reads aircraft and generic type definition JSON files, renders their associated SVG silhouettes using **Inkscape**, and packs them into a single spritesheet image with an accompanying JSON file that maps airframes and generic airframe types to sprite IDs in the sprite sheet.
 
-Future versions will also generate companion JavaScript metadata for sprite lookup.
+The tool is designed to extend an existing spritesheet as new airframes are added.
 
 ---
 
@@ -19,12 +19,15 @@ Paths inside airframe definition files are resolved relative to the repo root.
 
 For each airframe definition:
 
-1. Reads the airframe JSON metadata  
+1. Reads the airframe & generic type JSON metadata  
 2. Locates the referenced SVG silhouette  
 3. Uses **Inkscape v1+** to rasterise the SVG to PNG  
 4. Places the rendered sprite into the correct position in the spritesheet grid  
+5. Generates an accompanying JSON file that:
+  - Defines the sprites. Sprites are defined by a map of one or more IDs within the sprite sheet, plus rotation and scaling information. 
+  - Maps the airframe and generic types to sprites. 
 
-The result is a single PNG containing all aircraft sprites, suitable for use in web or game UIs.
+The result is a single PNG containing all aircraft sprites, and accompanying metadata, suitable for use in UIs.
 
 ---
 
@@ -53,32 +56,29 @@ go run ./cmd/build_spritesheet --inkscape_binary /usr/bin/inkscape --output_png 
 | Flag | Alias | Required | Description |
 |------|-------|----------|-------------|
 | `--inkscape_binary` | `--inkscape` | ✅ | Path to the Inkscape **v1+** binary |
-| `--output_png` | `-o` | ✅ | Path where the generated spritesheet PNG will be written |
+| `--output_png` | `--op` | ✅ | Path where the generated sprite sheet PNG will be written |
+| `—-output_json` | `—op` | ✅ | Path where the generated metadata JSON will be written |
 
 ---
 
 ## 📁 Airframe Definitions
 
-Each airframe is defined by a JSON file, see the README.md at the root of this repo for details.
+Each airframe and also generic airframe types (for aircraft that we don’t have type designators for) is defined by a JSON file, see the README.md at the root of this repo for details.
 
 ---
 
 ## 📦 Output
 
-The tool currently outputs:
+The outputs:
 
 ✔ A packed PNG spritesheet containing all airframes, and [original sprites](./cmd/build_spritesheet/original_sprites.png) at their original locations.  
 
-Planned:
-
-⬜ Companion JavaScript metadata describing sprite positions  
-⬜ Optional sprite atlas JSON output  
+✔ A JSON file containing the sprite sheet metadata
 
 ---
 
 ## 🧩 Typical Workflow
 
-1. Add a new airframe JSON + SVG  
-2. Run `build_spritesheet` from the repository root  
-3. Commit updated spritesheet to pw-ui repo
-4. (Future) Commit updated JS atlas to pw-ui repo
+This tool is run automatically on push to main when building release assets. 
+
+You should not have to run manually. 
