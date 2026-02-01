@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "SW4",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 32 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/SW4-1.svg" },
+      { "src": "silhouettes/SW4-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
