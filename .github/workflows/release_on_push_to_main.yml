@@ -141,11 +141,11 @@ jobs:
     name: Validate (${{ matrix.file }})
     runs-on: ubuntu-latest
     needs: discover-airframe-json
-    if: ${{ needs.discover-json.outputs.files != '[]' }}
+    if: ${{ needs.discover-airframe-json.outputs.files != '[]' }}
     strategy:
       fail-fast: false
       matrix:
-        file: ${{ fromJSON(needs.discover-json.outputs.files) }}
+        file: ${{ fromJSON(needs.discover-airframe-json.outputs.files) }}
     steps:
       - uses: actions/checkout@v6
       - name: Install check-jsonschema
@@ -164,12 +164,12 @@ jobs:
     name: Validate (${{ matrix.file }})
     runs-on: ubuntu-latest
     needs: discover-generics-json
-    if: ${{ needs.discover-json.outputs.files != '[]' }}
+    if: ${{ needs.discover-generics-json.outputs.files != '[]' }}
 
     strategy:
       fail-fast: false
       matrix:
-        file: ${{ fromJSON(needs.discover-json.outputs.files) }}
+        file: ${{ fromJSON(needs.discover-generics-json.outputs.files) }}
 
     steps:
       - uses: actions/checkout@v6
