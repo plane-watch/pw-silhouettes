@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 4,
+    "categoryText": "High vortex aircraft"
+  },
+  "aliasOf": "B752",
+  "notes": "Map to Boeing 757-200."
+}

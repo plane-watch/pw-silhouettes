@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 1,
+    "categoryText": "Light (less than 7000 kg)"
+  },
+  "aliasOf": "C172",
+  "notes": "Map to Cessna 172 Skyhawk, probably the most common aircraft on Earth."
+}

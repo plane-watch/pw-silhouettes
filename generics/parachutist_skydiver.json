@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 3,
+    "aircraftCategory": 3,
+    "categoryText": "Parachutist / skydiver"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 46 },
+    "noRotate": true
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/Parachutist.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": "Generic parachutist icon."
+}

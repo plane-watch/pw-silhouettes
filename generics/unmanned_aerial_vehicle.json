@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 3,
+    "aircraftCategory": 6,
+    "categoryText": "Unmanned aerial vehicle"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 32 },
+    "noRotate": true
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/Quadcopter-1.svg" },
+      { "src": "silhouettes/Quadcopter-2.svg" },
+      { "src": "silhouettes/Quadcopter-3.svg" },
+      { "src": "silhouettes/Quadcopter-4.svg" },
+      { "src": "silhouettes/Quadcopter-5.svg" },
+      { "src": "silhouettes/Quadcopter-6.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": "Map to generic quad copter."
+}

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 6,
+    "categoryText": "High performance (>5 g acceleration) and high speed (>400 kt)"
+  },
+  "aliasOf": "F16",
+  "notes": "Map to F-16 Fighting Falcon."
+}
