@@ -28,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v6
         with:
           go-version: "1.25"
@@ -48,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v6
         with:
           go-version: "1.25"
@@ -71,8 +75,7 @@ jobs:
     outputs:
       files: ${{ steps.set-matrix.outputs.files }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Build matrix
@@ -95,8 +98,7 @@ jobs:
     outputs:
       files: ${{ steps.set-matrix.outputs.files }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Build matrix
@@ -122,12 +124,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
       - id: out
         shell: bash
         run: |
           set -euo pipefail
-
           files="$(find generics -type f -name '*.json' | sort -u || true)"
           if [[ -z "${files}" ]]; then
             echo "files=[]" >> "$GITHUB_OUTPUT"
@@ -148,6 +148,8 @@ jobs:
         file: ${{ fromJSON(needs.discover-airframe-json.outputs.files) }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Install check-jsonschema
         run: |
           python3 -m pip install --user --upgrade pip pipx
@@ -165,22 +167,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: discover-generics-json
     if: ${{ needs.discover-generics-json.outputs.files != '[]' }}
-
     strategy:
       fail-fast: false
       matrix:
         file: ${{ fromJSON(needs.discover-generics-json.outputs.files) }}
-
     steps:
       - uses: actions/checkout@v6
-
+        with:
+          fetch-depth: 0
       - name: Install check-jsonschema
         run: |
           python3 -m pip install --user --upgrade pip pipx
           python3 -m pipx ensurepath
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           pipx install check-jsonschema
-
       - name: Validate JSON
         run: |
           schema="./schemas/generic.input.runtime.schema.json"
@@ -200,6 +200,8 @@ jobs:
         file: ${{ fromJSON(needs.discover-svg.outputs.files) }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Download svg_check
         uses: actions/download-artifact@v7
         with:
@@ -219,6 +221,8 @@ jobs:
       (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Download build_spritesheet
         uses: actions/download-artifact@v7
         with:
@@ -260,6 +264,9 @@ jobs:
       (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]') &&
       (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Install check-jsonschema
         run: |
           python3 -m pip install --user --upgrade pip pipx
