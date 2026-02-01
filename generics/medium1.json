@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 2,
+    "categoryText": "Medium 1 (between 7000 kg and 34000 kg)"
+  },
+  "aliasOf": "DH8B",
+  "notes": "Map to De Havilland Canada Dash 8-200."
+}

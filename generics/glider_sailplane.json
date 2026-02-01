@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 3,
+    "aircraftCategory": 1,
+    "categoryText": "Glider / sailplane"
+  },
+  "aliasOf": "ASK21",
+  "notes": "Map to Schleicher ASK 21."
+}

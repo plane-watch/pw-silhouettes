@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "F16",
+    "typeCode": "L1J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 34, "y": 41 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/F16.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": ""
+}

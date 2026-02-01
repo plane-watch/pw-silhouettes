@@ -13,6 +13,9 @@ type (
 		// AirframeToSprite maps an airframe ICAO (key) to a Sprite (value)
 		AirframeToSprite map[string]string `json:"airframeToSprite"`
 
+		// GenericToSprite maps a generic aircraft that doesn't have a specific type designator to a Sprite (value)
+		GenericToSprite map[string]string `json:"genericToSprite"`
+
 		// Sprites represents the artwork in the spritesheet. It is named after an airframe ICAO (the key).
 		Sprites map[string]Sprite `json:"sprites"`
 	}
@@ -32,7 +35,7 @@ type (
 		SpriteHeight int    `json:"spriteHeight"`
 	}
 
-	// Airframe represents the input JSON airframe schema defined at the root of this repo
+	// Airframe represents the input JSON airframe schema defined at the root of this repo for files in /airframes
 	Airframe struct {
 		Version int     `json:"version"`
 		ICAO    ICAO    `json:"icao"`
@@ -40,6 +43,23 @@ type (
 		Render  Render  `json:"render"`
 		Art     Art     `json:"art"`
 		Notes   string  `json:"notes"`
+	}
+
+	// Generic represents the input JSON airframe schema defined at the root of this repo for files in /generics
+	Generic struct {
+		Version int     `json:"version"`
+		ADSB    ADSB    `json:"adsb"`
+		AliasOf *string `json:"aliasOf,omitempty"`
+		Render  Render  `json:"render"`
+		Art     Art     `json:"art"`
+		Notes   string  `json:"notes"`
+	}
+
+	// ADSB represents the ADSB type/capability information for aircraft that don't have a specific type designator
+	ADSB struct {
+		TypeCode         int    `json:"typeCode"`
+		AircraftCategory int    `json:"aircraftCategory"`
+		CategoryText     string `json:"categoryText"`
 	}
 
 	// ICAO represents the ICAO information from the input JSON airframe schema

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 2,
+    "aircraftCategory": 1,
+    "categoryText": "Surface emergency vehicle"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 35 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/Rosenbauer_Panther_ARFF.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": "Map to Rosenbauer Panther ARFF."
+}

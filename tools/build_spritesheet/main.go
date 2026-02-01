@@ -21,6 +21,13 @@ var cmd = &cli.Command{
 			Hidden:  true,
 		},
 		&cli.StringFlag{
+			Name:    "generics_path",
+			Aliases: []string{"gp"},
+			Usage:   "Path to the generics JSON directory",
+			Value:   "generics/",
+			Hidden:  true,
+		},
+		&cli.StringFlag{
 			Name:     "inkscape_binary",
 			Aliases:  []string{"inkscape"},
 			Usage:    "Path to the inkscape v1+ binary",

@@ -58,7 +58,39 @@ func airframesFromDir(dir string) ([]*Airframe, error) {
 	return out, nil
 }
 
-func buildSpriteMap(airframes []*Airframe, idOffset int) map[string]int {
+func genericsFromDir(dir string) ([]*Generic, error) {
+	listing, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read dir: %w", err)
+	}
+
+	out := make([]*Generic, 0, len(listing))
+
+	for _, entry := range listing {
+		if entry.IsDir() {
+			log.Debug().Str("dir", entry.Name()).Msg("skipping dir")
+			continue
+		}
+		if !strings.HasSuffix(entry.Name(), ".json") {
+			log.Debug().Str("file", entry.Name()).Msg("skipping non-json file")
+			continue
+		}
+
+		g, err := GenericFromFile(filepath.Join(dir, entry.Name()))
+		if err != nil {
+			return nil, fmt.Errorf("failed to process file: %w", err)
+		}
+
+		out = append(out, g)
+		log.Info().
+			Str("category", g.ADSB.CategoryText).
+			Msg("added generic")
+	}
+
+	return out, nil
+}
+
+func buildSpriteMap(airframes []*Airframe, generics []*Generic, idOffset int) map[string]int {
 	spriteSet := make(map[string]int)
 	n := 0 + idOffset
 	for _, af := range airframes {
@@ -79,6 +111,24 @@ func buildSpriteMap(airframes []*Airframe, idOffset int) map[string]int {
 			n++
 		}
 	}
+	for _, g := range generics {
+		for _, frame := range g.Art.Frames {
+			if _, ok := spriteSet[frame.Src]; ok {
+				log.Info().
+					Str("category", g.ADSB.CategoryText).
+					Str("src", frame.Src).
+					Msg("skipping duplicate")
+				continue
+			}
+			log.Info().
+				Str("category", g.ADSB.CategoryText).
+				Str("src", frame.Src).
+				Int("sprite_id", n).
+				Msg("adding sprite")
+			spriteSet[frame.Src] = n
+			n++
+		}
+	}
 	return spriteSet
 }
 
@@ -86,6 +136,12 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 
 	// read airframe data from json files
 	airframes, err := airframesFromDir(cmd.String("airframes_path"))
+	if err != nil {
+		return err
+	}
+
+	// read generics data from json files
+	generics, err := genericsFromDir(cmd.String("generics_path"))
 	if err != nil {
 		return err
 	}
@@ -107,7 +163,7 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 	existingMaxSpriteID := (spritesPerRow * rows) - 1 // -1 as zero indexed
 
 	// generate unique set of sprites (as some airframes reference the same sprites)
-	newSprites := buildSpriteMap(airframes, existingMaxSpriteID+1)
+	newSprites := buildSpriteMap(airframes, generics, existingMaxSpriteID+1)
 
 	// Work out how much additional height we should add
 	numNewSprites := len(newSprites)
@@ -151,7 +207,10 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 		SpriteHeight: spriteHeight,
 	}
 	out.AirframeToSprite = make(map[string]string, len(airframes))
+	out.GenericToSprite = make(map[string]string, len(generics))
 	out.Sprites = make(map[string]Sprite, len(newSprites))
+
+	// process airframes
 	for _, af := range airframes {
 		if af.AliasOf != nil {
 			out.AirframeToSprite[af.ICAO.Designator] = *af.AliasOf
@@ -176,6 +235,36 @@ func runApp(ctx context.Context, cmd *cli.Command) error {
 		out.Sprites[af.ICAO.Designator] = s
 		// add airframe to output
 		out.AirframeToSprite[af.ICAO.Designator] = af.ICAO.Designator
+	}
+
+	// process generics
+	for _, g := range generics {
+
+		airframeType := fmt.Sprintf("%d/%d", g.ADSB.TypeCode, g.ADSB.AircraftCategory)
+
+		if g.AliasOf != nil {
+			out.GenericToSprite[airframeType] = *g.AliasOf
+			continue
+		}
+
+		// create the sprite
+		s := Sprite{
+			IDs:      make([]int, 0, 4),
+			Scale:    g.Render.Scale,
+			Anchor:   g.Render.Anchor,
+			NoRotate: g.Render.NoRotate,
+		}
+		if g.Art.FrameTime != 0 {
+			s.FrameTime = &g.Art.FrameTime
+		}
+		// add sprite IDs
+		for _, src := range g.Art.Frames {
+			s.IDs = append(s.IDs, newSprites[src.Src])
+		}
+		// add sprite to output
+		out.Sprites[airframeType] = s
+		// add airframe to output
+		out.GenericToSprite[airframeType] = airframeType
 	}
 
 	// Finally, write the new spritesheet
@@ -283,6 +372,19 @@ func AirframeFromFile(filename string) (*Airframe, error) {
 		return nil, fmt.Errorf("failed to unmarshal airframe: %w", err)
 	}
 	return af, nil
+}
+
+func GenericFromFile(filename string) (*Generic, error) {
+	b, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file: %w", err)
+	}
+	g := new(Generic)
+	err = json.Unmarshal(b, g)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal generic: %w", err)
+	}
+	return g, nil
 }
 
 func inkscapeConvertSVGtoPNG(inkscapeBinary, src, dst string) error {

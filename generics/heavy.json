@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 5,
+    "categoryText": "Heavy (larger than 136000 kg)"
+  },
+  "aliasOf": "B77W",
+  "notes": "Map to Boeing 777-300ER."
+}

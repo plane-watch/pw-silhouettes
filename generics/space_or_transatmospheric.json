@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 3,
+    "aircraftCategory": 7,
+    "categoryText": "Space or transatmospheric vehicle"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 51 },
+    "noRotate": true
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/Space_Shuttle.svg" }
+    ],
+    "frameTime": null
+  },
+  "notes": "Map to generic space shuttle."
+}

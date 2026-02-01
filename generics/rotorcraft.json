@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 7,
+    "categoryText": "Rotorcraft"
+  },
+  "aliasOf": "B06",
+  "notes": "Map to Bell 206 JetRanger."
+}

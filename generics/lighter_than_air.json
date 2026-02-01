@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 3,
+    "aircraftCategory": 2,
+    "categoryText": "Lighter-than-air"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 35 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/Zeppelin_NT-1.svg" },
+      { "src": "silhouettes/Zeppelin_NT-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": "Generic lighter-than-air (SHIP) mapped to Zeppelin NT-style silhouette."
+}

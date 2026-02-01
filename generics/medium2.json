@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "adsb": {
+    "typeCode": 4,
+    "aircraftCategory": 3,
+    "categoryText": "Medium 2 (between 34000 kg to 136000 kg)"
+  },
+  "aliasOf": "B738",
+  "notes": "Map to Boeing 737-800."
+}
