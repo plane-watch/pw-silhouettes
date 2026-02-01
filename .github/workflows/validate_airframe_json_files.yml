@@ -58,6 +58,6 @@ jobs:
 
       - name: Validate JSON
         run: |
-          schema="./schemas/airframe.input.runtime.v1.schema.json"
+          schema="./schemas/airframe.input.runtime.schema.json"
           echo "Validating: ${{ matrix.file }}"
           check-jsonschema --schemafile "${schema}" "${{ matrix.file }}"
