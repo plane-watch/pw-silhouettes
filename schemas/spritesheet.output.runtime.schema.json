@@ -5,17 +5,40 @@
   "type": "object",
   "required": ["version", "metadata", "airframeToSprite", "sprites"],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "version": { "const": 2 } },
+        "required": ["version"]
+      },
+      "then": {
+        "required": ["genericToSprite"]
+      }
+    }
+  ],
   "properties": {
     "version": {
       "description": "Schema version for this output JSON.",
       "type": "integer",
-      "minimum": 1
+      "enum": [1,2]
     },
     "metadata": {
       "$ref": "#/$defs/Metadata"
     },
     "airframeToSprite": {
       "description": "Maps an airframe ICAO (key) to a sprite name (value).",
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "genericToSprite": {
+      "description": "Maps an ADS-B generic category key (e.g. \"3/6\", \"4/4\") to a sprite name (value).",
       "type": "object",
       "propertyNames": {
         "type": "string",
