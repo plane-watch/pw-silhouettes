@@ -215,7 +215,7 @@ jobs:
     needs: [build-build_spritesheet, validate-airframe-json, validate-generics-json, validate-svg, discover-airframe-json, discover-svg, discover-generics-json ]
     if: ((needs.validate-airframe-json.result == 'success' || needs.discover-airframe-json.outputs.files == '[]') &&
       (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]') &&
-      (needs.validate-generics-json.result == 'success' || meeds.discover-generics-json.outputs.files == '[]'))
+      (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
       - uses: actions/checkout@v6
       - name: Download build_spritesheet
