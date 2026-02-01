@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
+      - "generics/**/*.json"
       - "airframes/**/*.json"
       - "silhouettes/**/*.svg"
   workflow_dispatch:
@@ -257,7 +258,7 @@ jobs:
     needs: [ build-release-assets ]
     if: ((needs.validate-airframe-json.result == 'success' || needs.discover-airframe-json.outputs.files == '[]') &&
       (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]') &&
-      (needs.validate-generics-json.result == 'success' || meeds.discover-generics-json.outputs.files == '[]'))
+      (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
       - name: Install check-jsonschema
         run: |
