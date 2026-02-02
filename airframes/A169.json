@@ -14,7 +14,7 @@
   "art": {
     "frames": [
       { "src": "silhouettes/A169-1.svg" },
-      { "src": "silhouettes/A169-2.svg" },
+      { "src": "silhouettes/A169-2.svg" }
     ],
     "frameTime": 50
   },
