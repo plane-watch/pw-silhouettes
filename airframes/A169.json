@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "A169",
+    "typeCode": "H2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 34, "y": 24 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/A169-1.svg" },
+      { "src": "silhouettes/A169-2.svg" },
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
