@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "B190",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": "B190D",
+  "notes": ""
+}

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "B190D",
+    "typeCode": "L2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/B190D-1.svg" },
+      { "src": "silhouettes/B190D-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
