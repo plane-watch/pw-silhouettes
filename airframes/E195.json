@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "E195",
+    "typeCode": "L2J",
+    "wakeCategory": "M"
+  },
+  "aliasOf": "E190",
+  "notes": ""
+}
