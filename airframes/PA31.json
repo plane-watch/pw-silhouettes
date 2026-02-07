@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "PA31",
+    "typeCode": "L2P",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/PA31-1.svg" },
+      { "src": "silhouettes/PA31-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
