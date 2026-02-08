@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "B214",
+    "typeCode": "H2T",
+    "wakeCategory": "M"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 24 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/B214-1.svg" },
+      { "src": "silhouettes/B214-2.svg" },
+      { "src": "silhouettes/B214-3.svg" },
+      { "src": "silhouettes/B214-4.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
