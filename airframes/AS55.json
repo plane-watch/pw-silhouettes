@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "AS55",
+    "typeCode": "H2T",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 19 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/AS55-1.svg" },
+      { "src": "silhouettes/AS55-2.svg" },
+      { "src": "silhouettes/AS55-3.svg" },
+      { "src": "silhouettes/AS55-4.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
