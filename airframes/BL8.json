@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "BL8",
+    "typeCode": "L1P",
+    "wakeCategory": "L"
+  },
+  "aliasOf": null,
+  "render": {
+    "scale": 1,
+    "anchor": { "x": 35, "y": 29 },
+    "noRotate": false
+  },
+  "art": {
+    "frames": [
+      { "src": "silhouettes/BL8-1.svg" },
+      { "src": "silhouettes/BL8-2.svg" }
+    ],
+    "frameTime": 50
+  },
+  "notes": ""
+}
