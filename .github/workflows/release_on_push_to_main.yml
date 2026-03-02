@@ -39,7 +39,7 @@ jobs:
         run: |
           go -C tools build -o ./svg_check ./svg_check
       - name: Upload svg_check
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: svg_check
           path: ./tools/svg_check/svg_check
@@ -63,7 +63,7 @@ jobs:
           set -euo pipefail
           go -C tools build -o ./build_spritesheet ./build_spritesheet
       - name: Upload build_spritesheet
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: build_spritesheet
           path: ./tools/build_spritesheet/build_spritesheet
@@ -203,7 +203,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download svg_check
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: svg_check
           path: ./
@@ -224,7 +224,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download build_spritesheet
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: build_spritesheet
           path: ./
@@ -244,13 +244,13 @@ jobs:
           ls -lah ./spritesheet.png
           ls -lah ./spritesheet.json
       - name: Upload spritesheet.png
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: spritesheet.png
           path: ./spritesheet.png
           if-no-files-found: error
       - name: Upload spritesheet.json
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: spritesheet.json
           path: ./spritesheet.json
@@ -274,7 +274,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           pipx install check-jsonschema
       - name: Download spritesheet.json
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.json
           path: ./
@@ -296,12 +296,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Download spritesheet.png
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.png
           path: ./
       - name: Download spritesheet.json
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.json
           path: ./
