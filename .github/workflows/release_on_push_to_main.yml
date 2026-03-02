@@ -203,7 +203,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download svg_check
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: svg_check
           path: ./
@@ -224,7 +224,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download build_spritesheet
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: build_spritesheet
           path: ./
@@ -274,7 +274,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           pipx install check-jsonschema
       - name: Download spritesheet.json
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.json
           path: ./
@@ -296,12 +296,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - name: Download spritesheet.png
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.png
           path: ./
       - name: Download spritesheet.json
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: spritesheet.json
           path: ./
