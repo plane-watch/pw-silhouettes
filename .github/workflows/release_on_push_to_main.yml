@@ -39,7 +39,7 @@ jobs:
         run: |
           go -C tools build -o ./svg_check ./svg_check
       - name: Upload svg_check
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: svg_check
           path: ./tools/svg_check/svg_check
@@ -63,7 +63,7 @@ jobs:
           set -euo pipefail
           go -C tools build -o ./build_spritesheet ./build_spritesheet
       - name: Upload build_spritesheet
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: build_spritesheet
           path: ./tools/build_spritesheet/build_spritesheet
@@ -244,13 +244,13 @@ jobs:
           ls -lah ./spritesheet.png
           ls -lah ./spritesheet.json
       - name: Upload spritesheet.png
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: spritesheet.png
           path: ./spritesheet.png
           if-no-files-found: error
       - name: Upload spritesheet.json
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: spritesheet.json
           path: ./spritesheet.json
