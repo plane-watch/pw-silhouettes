@@ -3,7 +3,7 @@ module github.com/plane-watch/pw-silhouettes
 go 1.25.5
 
 require (
-	github.com/rs/zerolog v1.35.0
+	github.com/rs/zerolog v1.35.1
 	github.com/urfave/cli/v3 v3.8.0
 )
 
