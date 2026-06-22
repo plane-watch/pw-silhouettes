@@ -27,7 +27,7 @@ jobs:
     name: Build svg_check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-go@v6
@@ -49,7 +49,7 @@ jobs:
     name: Build build_spritesheet
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-go@v6
@@ -75,7 +75,7 @@ jobs:
     outputs:
       files: ${{ steps.set-matrix.outputs.files }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Build matrix
@@ -98,7 +98,7 @@ jobs:
     outputs:
       files: ${{ steps.set-matrix.outputs.files }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Build matrix
@@ -121,7 +121,7 @@ jobs:
     outputs:
       files: ${{ steps.out.outputs.files }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - id: out
@@ -147,7 +147,7 @@ jobs:
       matrix:
         file: ${{ fromJSON(needs.discover-airframe-json.outputs.files) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install check-jsonschema
@@ -172,7 +172,7 @@ jobs:
       matrix:
         file: ${{ fromJSON(needs.discover-generics-json.outputs.files) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install check-jsonschema
@@ -199,7 +199,7 @@ jobs:
       matrix:
         file: ${{ fromJSON(needs.discover-svg.outputs.files) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Download svg_check
@@ -220,7 +220,7 @@ jobs:
       (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]') &&
       (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Download build_spritesheet
@@ -264,7 +264,7 @@ jobs:
       (needs.validate-svg.result == 'success' || needs.discover-svg.outputs.files == '[]') &&
       (needs.validate-generics-json.result == 'success' || needs.discover-generics-json.outputs.files == '[]'))
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install check-jsonschema
@@ -291,7 +291,7 @@ jobs:
       - name: Ensure jq is available
         run: jq --version
       - name: Checkout (with full history + tags)
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true

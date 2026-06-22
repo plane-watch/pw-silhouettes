@@ -17,7 +17,7 @@ jobs:
     outputs:
       files: ${{ steps.out.outputs.files }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -47,7 +47,7 @@ jobs:
         file: ${{ fromJSON(needs.discover-json.outputs.files) }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install check-jsonschema
         run: |
