@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/rs/zerolog v1.35.1
-	github.com/urfave/cli/v3 v3.10.1
+	github.com/urfave/cli/v3 v3.11.0
 )
 
 require (
