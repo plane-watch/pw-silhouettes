@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "icao": {
+    "designator": "B762",
+    "typeCode": "L2J",
+    "wakeCategory": "H"
+  },
+  "aliasOf": "B772",
+  "notes": ""
+}
